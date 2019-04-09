@@ -90,7 +90,6 @@ namespace orderedlist
                 // inserting the node to some position in the list
                 if (n->data < p->data && p->data < n->link->data)
                 {
-                    //node* p_link = n->link; // save old link for later use
                     p->link = n->link; // use old link for p
                     n->link = p; // link previous node to p
                     p->prev = n;
@@ -102,7 +101,7 @@ namespace orderedlist
     }
     
     template <class Item>
-    void OrderedList<Item>::remove(const OrderedList<Item>::data_type removedData)
+    void OrderedList<Item>::remove(const OrderedList<Item>::data_type& removedData)
     {
         for (node* p = head; p != nullptr; p = p->link)
         {
@@ -111,44 +110,60 @@ namespace orderedlist
                 // if the node to be removed is the head
                 if (p->prev == nullptr)
                 {
-                    head = p->link;
-                    head->prev = nullptr;
-                    p->link = nullptr;
-                    p->prev = nullptr;
+                    head = head->link;
                     delete p;
                     p = nullptr;
+
+                    if (head == nullptr) // if empty list
+                        tail = nullptr;  // there's no last node
+                    else
+                        head->prev = nullptr;
+                    --size;
                     return;
                 }
                 
                 // if the node to be removed is the tail
-                if (p->link == nullptr)
+                else if (p->link == nullptr)
                 {
-                    tail = p->prev;
-                    tail->link = nullptr;
-                    p->link = nullptr;
-                    p->prev = nullptr;
+                    tail = tail->prev;
                     delete p;
                     p = nullptr;
+                    
+                    if (tail == nullptr) // if empty list
+                        head = nullptr; // there's no first node
+                    else
+                        tail->link = nullptr;
+                    --size;
                     return;
                 }
                 
                 // if the node to be removed is neither the head nor the tail
-                p->prev->link = p->link;
-                p->link->prev = p->prev;
-                p->link = nullptr;
-                p->prev = nullptr;
-                delete p;
-                p = nullptr;
+                else
+                {
+                    p->prev->link = p->link;
+                    p->link->prev = p->prev;
+                    --size;
+                    delete p;
+                    p = nullptr;
+                    return;
+                }
             }
         }
     }
-//    
-//    template <class Item>
-//    OrderedList<Item> OrderedList<Item>::kLargest(const int k) const
-//    {
-//        return this;
-//    }
-//    
+    
+    template <class Item>
+    OrderedList<Item> OrderedList<Item>::kLargest(const int k) const
+    {
+        data_type head_val = get(size - k); // getting the starting node
+        OrderedList<data_type> ol;
+        for (node* p = head; p != nullptr; p = p->link)
+        {
+            if (head_val < p->data) // if the node to be added > the head_val
+                ol.insert(p->data);// add that node
+        }
+        return ol;
+    }
+    
     template <class Item>
     typename OrderedList<Item>::data_type OrderedList<Item>::get(const int k) const
     {
@@ -159,5 +174,8 @@ namespace orderedlist
             if (i++ == k)
                 return p->data;
         }
+        // this statement will never be reached and is only here to satisfy
+        // return constraints
+        return head->data;
     }
 }

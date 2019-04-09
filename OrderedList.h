@@ -34,13 +34,12 @@ namespace orderedlist
     public:
         OrderedList(); // constructor
         
-        void insert(const data_type& newItem);
-        
         // "Gang of Three"
         OrderedList(const OrderedList<Item>& rhs); // copy constructor
         ~OrderedList(); // destructor
         void operator=(const OrderedList<Item>& rhs); // assignment operator
         
+        // Nested "iterator" class
         class iterator
 	{
             public:
@@ -54,16 +53,18 @@ namespace orderedlist
                 node* current = nullptr;
 	};
 
+        // Member functions
 	iterator begin() { return iterator(head); }
 	iterator end() { return iterator(nullptr); }
         
-        void remove(const data_type removedData);
-        //OrderedList kLargest(const int k) const;
+        void remove(const data_type& removedData);
+        OrderedList kLargest(const int k) const;
         data_type get(const int k) const;
+        void insert(const data_type& newItem);
     };
     // Non-member functions
     template <class Item>
-    OrderedList<Item> operator+(const OrderedList<Item>& rhs); // addition operator
+    OrderedList<Item> operator+(const OrderedList<Item>& lhs, const OrderedList<Item>& rhs); // addition operator
     
     template <class Item>
     std::ostream& operator<< (std::ostream& out, const OrderedList<Item> &ol); // stream insertion operator
