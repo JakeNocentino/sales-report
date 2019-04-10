@@ -145,6 +145,7 @@ namespace orderedlist
                     --size;
                     delete p;
                     p = nullptr;
+                    
                     return;
                 }
             }
@@ -177,5 +178,22 @@ namespace orderedlist
         // this statement will never be reached and is only here to satisfy
         // return constraints
         return head->data;
+    }
+    
+    // Maybe right??? FIX LATER
+    template <class Item>
+    OrderedList<Item> OrderedList<Item>::operator+(const OrderedList<Item>& rhs)
+    {
+//        int largest_size = (size > rhs.size) ? size : rhs.size; // ternary operator to get largest size
+//        for (int i = 0; i < size; ++i)
+//        {
+//            
+//        }
+        OrderedList<data_type> ol;
+        for (node* p = head; p != nullptr; p = p->link)
+            ol.insert(p->data);
+        for (node* p = rhs.head; p != nullptr; p = p->link)
+            ol.insert(p->data);
+        return ol;
     }
 }
