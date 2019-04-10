@@ -33,18 +33,21 @@ namespace orderedlist
     {
         if (this == &rhs) // checking for self assignment
             return;
-        if (head != nullptr) // checking for existing "head" node
+        if (head != nullptr) // if list is not empty
         {
-            delete head;
-            head = nullptr;
+            for (node* p = head; p != nullptr; p = p->link)
+            {
+                delete p;
+                p = nullptr;
+            }
         }
-        if (tail != nullptr) // checking for existing "tail"
-        {
-            delete tail;
-            tail = nullptr;
-        }
-        head = rhs.head;
-        tail = rhs.tail;
+        
+        for (node* p = rhs.head; p != nullptr; p = p->link)
+            insert(p->data);
+//        std::cout << "hello!" << std::endl;
+//        head = rhs.head;
+//        tail = rhs.tail;
+//        size = rhs.size;
     }
     
     // Member functions
@@ -182,7 +185,7 @@ namespace orderedlist
     
     // Maybe right??? FIX LATER
     template <class Item>
-    OrderedList<Item> OrderedList<Item>::operator+(const OrderedList<Item>& rhs)
+    OrderedList<Item> OrderedList<Item>::operator+(const OrderedList<Item>& rhs) const
     {
 //        int largest_size = (size > rhs.size) ? size : rhs.size; // ternary operator to get largest size
 //        for (int i = 0; i < size; ++i)

@@ -28,7 +28,7 @@ namespace orderedlist
         OrderedList kLargest(const int k) const;
         data_type get(const int k) const;
         void insert(const data_type& newItem);
-        OrderedList<Item> operator+(const OrderedList<Item>& rhs); // addition operator
+        OrderedList<Item> operator+(const OrderedList<Item>& rhs) const; // addition operator
         
         // friend functions
         friend std::ostream& operator<<(std::ostream& out, const OrderedList<Item>& list)
