@@ -28,18 +28,12 @@ namespace orderedlist
         if (head == nullptr) // check for existing deallocation
             return;
         
-        if (head == tail) // if the head is the same as the tail
+        node* nodeToDelete = head;
+        while (nodeToDelete != nullptr)
         {
-            delete head;
-            head = nullptr;
-            tail = nullptr;
-        }
-        else // if the head is not the same as the tail
-        {
-            delete head;
-            head = nullptr;
-            delete tail;
-            tail = nullptr;
+            node* current = nodeToDelete->link;
+            delete nodeToDelete;
+            nodeToDelete = current;
         }
     }
     

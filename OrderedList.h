@@ -114,7 +114,7 @@ namespace orderedlist
         OrderedList<Item> operator+(const OrderedList<Item>& rhs) const; // addition operator
         
         // friend functions
-        friend std::ostream& operator<<(std::ostream& out, const OrderedList<Item>* list)
+        friend std::ostream& operator<<(std::ostream& out, const OrderedList<Item> list)
 	{
             node* p = list->head;
             while (p != nullptr)
