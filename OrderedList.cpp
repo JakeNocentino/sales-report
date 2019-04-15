@@ -1,3 +1,7 @@
+// Jacob Nocentino
+// Assignment #3
+// Data Structures in C++
+
 #include "OrderedList.h"
 
 namespace orderedlist
@@ -6,7 +10,8 @@ namespace orderedlist
     OrderedList<Item>::OrderedList()
     {
         head = nullptr;
-        tail = nullptr;
+        tail = head;
+        size = 0;
     }
     
     template <class Item>
@@ -20,12 +25,22 @@ namespace orderedlist
     template <class Item>
     OrderedList<Item>::~OrderedList() // destructor
     {
-        if (head == nullptr && tail == nullptr) // check for existing deallocation
+        if (head == nullptr) // check for existing deallocation
             return;
-        delete head;
-        head = nullptr;
-        delete tail;
-        tail = nullptr;
+        
+        if (head == tail) // if the head is the same as the tail
+        {
+            delete head;
+            head = nullptr;
+            tail = nullptr;
+        }
+        else // if the head is not the same as the tail
+        {
+            delete head;
+            head = nullptr;
+            delete tail;
+            tail = nullptr;
+        }
     }
     
     template <class Item>
@@ -33,21 +48,16 @@ namespace orderedlist
     {
         if (this == &rhs) // checking for self assignment
             return;
-        if (head != nullptr) // if list is not empty
-        {
-            for (node* p = head; p != nullptr; p = p->link)
-            {
-                delete p;
-                p = nullptr;
-            }
-        }
+        while (head != nullptr) // if list is not empty
+            remove(head->data);
         
-        for (node* p = rhs.head; p != nullptr; p = p->link)
-            insert(p->data);
-//        std::cout << "hello!" << std::endl;
-//        head = rhs.head;
-//        tail = rhs.tail;
-//        size = rhs.size;
+        node* current = rhs.head;
+        while (current != nullptr) // while the end of the list has not been reached yet
+        {
+            // set the new OrderedList values
+            insert(current->data);
+            current = current->link;
+        }
     }
     
     // Member functions
@@ -59,10 +69,12 @@ namespace orderedlist
         p->link = nullptr;
         p->prev = nullptr;
         
-        if (head == nullptr && tail == nullptr) // if OrderedList is empty
+        if (head == nullptr || tail == nullptr) // if OrderedList is empty
         {
             head = p;
             tail = p;
+            ++size;
+            return;
         }
         else
         {
@@ -104,11 +116,11 @@ namespace orderedlist
     }
     
     template <class Item>
-    void OrderedList<Item>::remove(const OrderedList<Item>::data_type& removedData)
+    void OrderedList<Item>::remove(const OrderedList<Item>::data_type& removedItem)
     {
         for (node* p = head; p != nullptr; p = p->link)
         {
-            if (p->data == removedData)
+            if (p->data == removedItem)
             {
                 // if the node to be removed is the head
                 if (p->prev == nullptr)
@@ -160,9 +172,18 @@ namespace orderedlist
     {
         data_type head_val = get(size - k); // getting the starting node
         OrderedList<data_type> ol;
-        for (node* p = head; p != nullptr; p = p->link)
+        
+        if (k + 1 == 2)
         {
-            if (head_val < p->data) // if the node to be added > the head_val
+            ol.insert(tail->data);
+            return ol;
+        }
+        
+        for (node* p = tail; p != nullptr; p = p->prev)
+        {
+            if (head_val > p->data) // if the node to be added >= the head_val
+                return ol;
+            else
                 ol.insert(p->data);// add that node
         }
         return ol;
@@ -171,7 +192,7 @@ namespace orderedlist
     template <class Item>
     typename OrderedList<Item>::data_type OrderedList<Item>::get(const int k) const
     {
-        assert(k <= size); // making sure the argument is correctly supplied
+        assert(k < size); // making sure the argument is correctly supplied
         int i = 0;
         for (node* p = head; p != nullptr; p = p->link)
         {
@@ -183,7 +204,21 @@ namespace orderedlist
         return head->data;
     }
     
-    // Maybe right??? FIX LATER
+    template <class Item>
+    void OrderedList<Item>::printReversed() const
+    {
+        node* current = tail;
+        while (current != nullptr)
+        {
+            if (current != head)
+                std::cout << current->data << ", ";
+            else
+                std::cout << current->data;
+            current = current->prev;
+        }
+    }
+    
+    // NOT RIGHT!! FIX LATER!!
     template <class Item>
     OrderedList<Item> OrderedList<Item>::operator+(const OrderedList<Item>& rhs) const
     {

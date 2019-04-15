@@ -1,3 +1,7 @@
+// Jacob Nocentino
+// Assignment #3
+// Data Structures in C++
+
 #include "OrderedList.h"
 #include "Salesperson.h"
 #include "OrderedList.cpp"
@@ -8,55 +12,21 @@ using namespace salesperson;
 
 int main()
 {
-//    OrderedList<double> ol;
-//    ol.insert(889.543);
-//    ol.insert(234.7232);
-//    ol.insert(883.52);
-//    ol.insert(202.523);
-//    ol.insert(990.241);
-//    ol.insert(307.909);
-//    ol.insert(990.242);
-//    ol.insert(440.440);
-//    
-//    cout << ol << endl;
-//    
-//    cout << endl << ol.get(6) << endl << endl;
-    
-//    ol->remove(307.909);
-//    ol->remove(883.52);
-//    ol->remove(990.241);
-//    ol->remove(889.543);
-    //ol.remove(990.242);
-    //ol.remove(234.7232);
-    
-//    cout << ol << endl;
-//    
-//    OrderedList<double> ol2 = ol.kLargest(6);
-//    cout << ol2 << endl;
-//    
-//    OrderedList<double> ol3;
-//    ol3.insert(1.1);
-//    ol3.insert(1001.42);
-//    ol3.insert(696.96);
-//    
-//    OrderedList<double> ol4 = ol + ol3;
-//    cout << ol4 << endl;
-    
-    string line;
+    string line; // gets the current line
     ifstream infile;
-    list<Salesperson> sales_list;
+    int topSales; // the user entered number for top sales
+    list<Salesperson> sales_list; // stl list of Salespersons
     infile.open("sales.txt");
     
     int i = 0; // count which line it is
-    vector<int> ids; // contains current ids
-    int id;
-    string first;
-    string last;
-    int ol_length;
-    bool not_in_list = true;
+    int id; // contains current Salesperson id
+    string first; // contains current Salesperson first name
+    string last; // contains current Salesperson last name
+    int ol_length; // contains the OrderedList length
+    bool not_in_list = true; // determines if the Salesperson has already been added to the list or not
+    
     while(getline(infile, line))
     {
-        cout << line << endl;
         if (i==3) // reset count to 0 after third line
             i = 0;
         
@@ -80,26 +50,20 @@ int main()
             
             not_in_list = true;
             
-            // for debuggin -- DELETE LATER
-            cout << id << " . " << first << " . " << last << " . " << ol_length << endl;
-            
             if (sales_list.empty()) // if the sales_list is empty, add the first entry
             {
-                ids.push_back(id);
                 Salesperson sp(id, first, last);
                 sales_list.push_back(sp);
             }
             else
             {
                 // checking if Salesperson is already in list
-                for (int i = 0; i < ids.size(); ++i)
-                {
-                    if (id == ids[i]) // if the Salesperson is in the list
+                for (list<Salesperson>::iterator itr = sales_list.begin(); itr != sales_list.end(); ++itr)
+                    if (id == (*itr).get_id())
                     {
                         not_in_list = false;
                         break;
                     }
-                }
                 // if the Salesperson was not in the list
                 if (not_in_list)
                 {
@@ -112,53 +76,80 @@ int main()
         {
             if (not_in_list)
             {
-                cout << "NOT IN LIST" << endl;
-                ids.push_back(id);
-                OrderedList<float> ol;
+                // cout << "NOT IN LIST" << endl;
+                OrderedList<float>* ol = new OrderedList<float>;
                 for (int i = 0; i < ol_length; ++i)
                 {
                     // get the num to be added
                     int num = stoi(line.substr(0, line.find_first_of(" ")));
-                    ol.insert(num);
+                    ol->insert(num);
                     line = line.substr(line.find_first_of(" ") + 1, line.length());
                 }
-                sales_list.back().setOrderedList(ol);
+                sales_list.back().set_ordered_list(*ol);
+                
+                // delete dynamically-allocated memory and free up its space
+                delete ol;
+                ol = nullptr;
             }
             else
             {
-                cout << "IN LIST" << endl;
-                OrderedList<float> new_sales; // ol for new_sales
-                OrderedList<float> newOl; // ol for new+sales + old_sales
+                // cout << "IN LIST" << endl;
+                OrderedList<float>* new_sales = new OrderedList<float>; // ol for new sales
+                OrderedList<float>* new_ol = new OrderedList<float>; // ol for new+sales + old_sales
+                OrderedList<float>* cur_sales = new OrderedList<float>; // ol for current sales (old + new)
+                
+                // adding items to new_sales
                 for (int i = 0; i < ol_length; ++i)
                 {
                     // get the num to be added
                     int num = stoi(line.substr(0, line.find_first_of(" ")));
-                    cout << num << endl;
-                    new_sales.insert(num); // create new_sales OrderedList
+                    new_sales->insert(num); // create new_sales OrderedList
                     line = line.substr(line.find_first_of(" ") + 1, line.length());
                 }
                 // get the Salesperson to expand their OrderedList of sales
                 for (list<Salesperson>::iterator itr = sales_list.begin(); itr != sales_list.end(); ++itr)
                 {
-                    if ((*itr).getId() == id) // if the Salesperson is the one we are looking for
+                    if ((*itr).get_id() == id) // if the Salesperson is the one we are looking for
                     {
-                        OrderedList<float> cur_sales = (*itr).get_sales_list(); // get current sales
-                        cout << cur_sales << endl;
-                        cout << new_sales << endl;
-                        newOl = (cur_sales + new_sales);
-                        cout << newOl << endl;
-                        //(*itr).setOrderedList(newOl); // BUG HERE
-                        cout << "hello there" << endl;
-                        //cout << newOl << "hi" << endl;
+                        *cur_sales = (*itr).get_sales_list(); // get current sales
+                        *new_ol = (*cur_sales + *new_sales);
+                        (*itr).set_ordered_list(*new_ol);
                     }
                 }
+                
+                // delete dynamically-allocated memory and free up its space
+                delete new_sales;
+                new_sales = nullptr;
+                delete new_ol;
+                new_ol = nullptr;
+                delete cur_sales;
+                cur_sales = nullptr;
             }
         }
         ++i; // increment line counter
     }
     
-    //cout << sales_list << endl;
+    infile.close();
+    
+    sales_list.sort(); // sorting using the overloaded operator<
+    cout << "How many of each salesperon's top sales amounts should be shown? ";
+    cin >> topSales;
+    cout << flush;
+    for (list<Salesperson>::iterator itr = sales_list.begin(); itr != sales_list.end(); ++itr)
+    {
+        //OrderedList<float> kLargest = (*itr).get_sales_list().kLargest(topSales);
+        OrderedList<float>* kLargest = new OrderedList<float>;
+        *kLargest = (*itr).get_sales_list().kLargest(topSales);
+    
+        cout << (*itr).get_id() << " " << (*itr).get_first() << " " <<
+                (*itr).get_last() << " ";
+        kLargest->printReversed();
+        cout << endl;
+        
+        // delete dynamically-allocated memory and free up its space
+        delete kLargest;
+        kLargest = nullptr;
+    }
     
     return EXIT_SUCCESS;
 }
-
