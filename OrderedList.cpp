@@ -35,6 +35,8 @@ namespace orderedlist
             delete nodeToDelete;
             nodeToDelete = current;
         }
+        head = nullptr;
+        tail = nullptr;
     }
     
     template <class Item>
