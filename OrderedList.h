@@ -112,6 +112,7 @@ namespace orderedlist
         data_type get(const int k) const;
         void printReversed() const;
         OrderedList<Item> operator+(const OrderedList<Item>& rhs) const; // addition operator
+        //void moveNode(node** destRef, node** sourceRef) const;
         
         // friend functions
         friend std::ostream& operator<<(std::ostream& out, const OrderedList<Item> list)
@@ -154,4 +155,3 @@ namespace orderedlist
 //#include "OrderedList.cpp"
 
 #endif /* ORDEREDLIST_H */
-

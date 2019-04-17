@@ -218,16 +218,54 @@ namespace orderedlist
     template <class Item>
     OrderedList<Item> OrderedList<Item>::operator+(const OrderedList<Item>& rhs) const
     {
-//        int largest_size = (size > rhs.size) ? size : rhs.size; // ternary operator to get largest size
-//        for (int i = 0; i < size; ++i)
-//        {
-//            
-//        }
+//        OrderedList<data_type> ol;
+//        for (node* p = head; p != nullptr; p = p->link)
+//            ol.insert(p->data);
+//        for (node* p = rhs.head; p != nullptr; p = p->link)
+//            ol.insert(p->data);
+//        return ol;
         OrderedList<data_type> ol;
-        for (node* p = head; p != nullptr; p = p->link)
-            ol.insert(p->data);
-        for (node* p = rhs.head; p != nullptr; p = p->link)
-            ol.insert(p->data);
+        
+        node* ol1Cur = this->head;
+        node* ol2Cur = rhs.head;
+        
+        // while neither list is empty
+        while (true)
+        {
+            // if the first OrderedList is empty
+            if (ol1Cur == nullptr)
+            {
+                // insert all other data from the second OrderedList
+                while (ol2Cur != nullptr)
+                {
+                    ol.insert(ol2Cur->data);
+                    ol2Cur = ol2Cur->link;
+                }
+                break;
+            }
+            
+            // if the second OrderedList is empty
+            if (ol2Cur == nullptr)
+            {
+                // insert all other data from the first OrderedList
+                while (ol1Cur != nullptr)
+                {
+                    ol.insert(ol1Cur->data);
+                    ol1Cur = ol1Cur->link;
+                }
+                break;
+            }
+            if (ol1Cur->data >= ol2Cur->data)
+            {
+                ol.insert(ol1Cur->data);
+                ol1Cur = ol1Cur->link;
+            }
+            else
+            {
+                ol.insert(ol2Cur->data);
+                ol2Cur = ol2Cur->link;
+            }
+        }
         return ol;
     }
 }
