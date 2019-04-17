@@ -214,16 +214,9 @@ namespace orderedlist
         }
     }
     
-    // NOT RIGHT!! FIX LATER!!
     template <class Item>
     OrderedList<Item> OrderedList<Item>::operator+(const OrderedList<Item>& rhs) const
     {
-//        OrderedList<data_type> ol;
-//        for (node* p = head; p != nullptr; p = p->link)
-//            ol.insert(p->data);
-//        for (node* p = rhs.head; p != nullptr; p = p->link)
-//            ol.insert(p->data);
-//        return ol;
         OrderedList<data_type> ol;
         
         node* ol1Cur = this->head;
@@ -238,7 +231,17 @@ namespace orderedlist
                 // insert all other data from the second OrderedList
                 while (ol2Cur != nullptr)
                 {
-                    ol.insert(ol2Cur->data);
+                    node* p = new node;
+                    p->data = ol2Cur->data;
+                    p->link = nullptr;
+                    
+                    if (ol.head == nullptr)
+                        ol.head = p;
+                    else
+                        ol.tail->link = p;
+                    
+                    ol.tail = p;
+                    
                     ol2Cur = ol2Cur->link;
                 }
                 break;
@@ -250,19 +253,51 @@ namespace orderedlist
                 // insert all other data from the first OrderedList
                 while (ol1Cur != nullptr)
                 {
-                    ol.insert(ol1Cur->data);
+                    node* p = new node;
+                    p->data = ol1Cur->data;
+                    p->link = nullptr;
+                    
+                    if (ol.head == nullptr)
+                        ol.head = p;
+                    else
+                        ol.tail->link = p;
+                    
+                    ol.tail = p;
+                    
                     ol1Cur = ol1Cur->link;
                 }
                 break;
             }
-            if (ol1Cur->data >= ol2Cur->data)
+            
+            // checking which data to push to the end
+            if (ol1Cur->data < ol2Cur->data)
             {
-                ol.insert(ol1Cur->data);
+                node* p = new node;
+                p->data = ol1Cur->data;
+                p->link = nullptr;
+                    
+                if (ol.head == nullptr)
+                    ol.head = p;
+                else
+                    ol.tail->link = p;
+                    
+                ol.tail = p;
+                
                 ol1Cur = ol1Cur->link;
             }
             else
             {
-                ol.insert(ol2Cur->data);
+                node* p = new node;
+                p->data = ol2Cur->data;
+                p->link = nullptr;
+                    
+                if (ol.head == nullptr)
+                    ol.head = p;
+                else
+                    ol.tail->link = p;
+                    
+                ol.tail = p;
+                
                 ol2Cur = ol2Cur->link;
             }
         }

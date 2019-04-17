@@ -151,5 +151,9 @@ int main()
         kLargest = nullptr;
     }
     
+    cout << endl << "Enter any character to close." << endl;
+    char c;
+    cin >> c;
+    
     return EXIT_SUCCESS;
 }

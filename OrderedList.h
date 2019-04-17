@@ -9,7 +9,7 @@
  * CONSTRUCTORS:
  *      OrderedList()
  *          Precondition: The user must have an idea of using an OrderedList
- *                        to solve a problem.
+ *                        to use in code.
  *          Postcondition: A new OrderedList object will be created with the
  *                         type that the user specifies.
  * 
@@ -112,12 +112,11 @@ namespace orderedlist
         data_type get(const int k) const;
         void printReversed() const;
         OrderedList<Item> operator+(const OrderedList<Item>& rhs) const; // addition operator
-        //void moveNode(node** destRef, node** sourceRef) const;
         
         // friend functions
-        friend std::ostream& operator<<(std::ostream& out, const OrderedList<Item> list)
+        friend std::ostream& operator<<(std::ostream& out, const OrderedList<Item>& list)
 	{
-            node* p = list->head;
+            node* p = list.head;
             while (p != nullptr)
             {
                 if (p->link == nullptr) // if the last node
