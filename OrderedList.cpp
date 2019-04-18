@@ -112,7 +112,7 @@ namespace orderedlist
     }
     
     template <class Item>
-    void OrderedList<Item>::remove(const OrderedList<Item>::data_type& removedItem)
+    void OrderedList<Item>::remove(const data_type& removedItem)
     {
         for (node* p = head; p != nullptr; p = p->link)
         {
